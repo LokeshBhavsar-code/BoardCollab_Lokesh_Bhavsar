@@ -8,9 +8,7 @@ import persistenceService from "./services/persistence.service.js";
 
 const port = Number(process.env.PORT || process.env.BACKEND_PORT || 5000);
 const server = http.createServer(app);
-const io = initializeSockets(server);
-// M-6: Register io on app so RoomsController can fetch it via req.app.get("io")
-app.set("io", io);
+let io;
 
 async function startServer() {
   try {
@@ -19,6 +17,10 @@ async function startServer() {
 
     // Initialize Redis (non-blocking fallback to in-memory caching if Redis container is not running)
     await initRedis();
+
+    io = initializeSockets(server);
+    // M-6: Register io on app so RoomsController can fetch it via req.app.get("io")
+    app.set("io", io);
 
     server.listen(port, () => {
       console.log(`[Server] BoardCollab API & Realtime Server listening on port ${port}`);
@@ -41,7 +43,7 @@ async function gracefulShutdown(signal) {
     await persistenceService.flush();
 
     // 2. Close Socket.io & HTTP server
-    io.close();
+    io?.close();
     await new Promise((resolve) => server.close(resolve));
     console.log("[Server] HTTP and Socket server closed");
 

@@ -39,10 +39,10 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      NODE_ENV: development
+      NODE_ENV: ${NODE_ENV:-development}
       PORT: ${BACKEND_PORT:-5000}
-      MONGODB_URI: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@${MONGO_HOST:-mongo}:27017/${MONGO_DATABASE}?authSource=admin
-      REDIS_URL: redis://:${REDIS_PASSWORD}@${REDIS_HOST:-redis}:6379
+      MONGODB_URI: '${MONGODB_URI:-mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@${MONGO_HOST:-mongo}:27017/${MONGO_DATABASE}?authSource=admin}'
+      REDIS_URL: '${REDIS_URL:-redis://:${REDIS_PASSWORD}@${REDIS_HOST:-redis}:6379}'
       CLIENT_ORIGIN: ${CLIENT_ORIGIN}
     ports:
       - "${BACKEND_PORT:-5000}:${BACKEND_PORT:-5000}"
@@ -54,7 +54,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    command: sh -c 'if [ "$$NODE_ENV" = development ]; then npm run seed; fi; npm run dev'
+    command: sh -c 'if [ "$${NODE_ENV}" = development ]; then npm run seed; npm run dev; else npm start; fi'
 
   frontend:
     build:
