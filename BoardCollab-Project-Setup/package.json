@@ -1,0 +1,13 @@
+{
+  "name": "boardcollab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Real-time collaborative whiteboard application",
+  "scripts": {
+    "dev": "docker compose up --build",
+    "dev:down": "docker compose down",
+    "dev:logs": "docker compose logs -f",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "workspaces": ["backend", "frontend"]
+}
