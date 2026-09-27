@@ -1,22 +1,29 @@
 # Scalability Strategy
 
 ## Purpose
-Define the likely horizontal and vertical scaling direction for BoardCollab.
+Define the horizontal and vertical scaling roadmap for BoardCollab, establishing baseline deployment constraints and sharding patterns.
 
-## Target design
-- room-based partitioning for collaboration flows
-- Redis-based pub/sub for global socket fan-out across backend instances
-- MongoDB for durable data and session snapshots
-- frontend optimization to avoid excessive re-renders in large boards
+## 1. Single-Region Architecture Baseline
+- **Primary Assumption**: The system is designed to operate within a **single primary cloud region** with sub-50ms round-trip latency between microservices.
+- **Benefits**: Simplifies real-time event ordering, eliminates cross-region WAN split-brain risks, and avoids expensive distributed transactions.
 
-## Constraints
-- room-level concurrency targets are product goals, not measured benchmarks
-- no scaling test has been run yet
+## 2. Horizontal Scaling Layers
+1. **Application Layer (Express + Socket.IO)**:
+   - Stateless backend nodes scaled horizontally behind a Layer 7 Load Balancer.
+   - Redis Pub/Sub coordinates room event fan-out across instances.
+2. **Persistence Layer (MongoDB)**:
+   - Sharded cluster when data exceeds a single replica set.
+   - Shard key: `{ roomId: "hashed" }` to evenly distribute rooms while co-locating all elements of a room on a single shard.
+3. **Cache & Ephemeral Presence (Redis)**:
+   - Redis Cluster / Sentinel for presence tracking and temporary coordination.
 
-## Implementation status
-Status: design-level strategy only.
+## 3. Operating Limits
+- **Max Elements per Room**: 10,000 active elements.
+- **Max Stroke Length**: 5,000 points.
+- **Undo History Limit**: 50 actions per user per room.
+- **Persistence Debounce**: 500ms batch flush.
 
 ## Related
-- [Socket scaling](socket-scaling.md)
+- [Scalability and sharding](../02-architecture/scalability-and-sharding.md)
+- [System assumptions and limits](../01-overview/system-assumptions-and-limits.md)
 - [Capacity planning](capacity-planning.md)
-- [Performance benchmarks](performance-benchmarks.md)

@@ -1,2 +1,0 @@
-# Not applicable: BoardCollab backend uses Node.js/npm, not Python.
-# Backend dependencies are defined in backend/package.json.
