@@ -1,22 +1,67 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import AuthForm from "./components/AuthForm.jsx";
+import CanvasBoard from "./components/CanvasBoard.jsx";
+import RoomEntry from "./components/RoomEntry.jsx";
+import UserList from "./components/UserList.jsx";
+import { useSocket } from "./hooks/useSocket.js";
+import { hydrateCanvas } from "./redux/canvasSlice.js";
+import { getTokenExpiry } from "./redux/store.js";
+import { clearCredentials, setActiveRoom, setCredentials } from "./redux/roomSlice.js";
+
 export default function App() {
+  const dispatch = useDispatch();
+  const { token, user, activeRoom, users, connected, error } = useSelector((state) => state.room);
+  const socket = useSocket(token, activeRoom?._id || activeRoom?.id);
+
+  useEffect(() => {
+    if (!token) return undefined;
+    const delay = getTokenExpiry(token) - Date.now();
+    if (delay <= 0) {
+      dispatch(clearCredentials());
+      return undefined;
+    }
+    const timeout = window.setTimeout(() => dispatch(clearCredentials()), delay);
+    return () => window.clearTimeout(timeout);
+  }, [dispatch, token]);
+
+  function enterRoom(room) {
+    dispatch(hydrateCanvas({ roomId: room._id || room.id, elements: room.elements || [] }));
+    dispatch(setActiveRoom(room));
+  }
+
   return (
-    <main className="shell">
+    <div className={activeRoom ? "app-shell board-shell" : "app-shell"}>
       <header className="topbar">
-        <div className="brand-mark">B</div>
-        <div>
-          <h1>BoardCollab</h1>
-          <p>Real-time collaborative whiteboard</p>
+        <button className="brand" type="button" onClick={() => activeRoom && dispatch(setActiveRoom(null))} aria-label="BoardCollab home">
+          <span className="brand-mark">B</span><span>BoardCollab</span>
+        </button>
+        <div className="topbar-right">
+          {activeRoom && <UserList users={users} currentUserId={user?.id} />}
+          {user && <span className="account-name">{user.username}</span>}
+          {user && <button className="quiet-button" type="button" onClick={() => dispatch(clearCredentials())}>Sign out</button>}
         </div>
-        <span className="status"><i /> Setup ready</span>
       </header>
-      <section className="welcome">
-        <span className="eyebrow">PROJECT FOUNDATION</span>
-        <h2>Your collaborative workspace starts here.</h2>
-        <p>The React frontend is running. Canvas tools, authentication, rooms, and live collaboration will be implemented in the upcoming phases.</p>
-        <div className="feature-row">
-          <span>React + Konva</span><span>Express + Socket.IO</span><span>MongoDB + Redis</span>
-        </div>
-      </section>
-    </main>
+      {!token ? (
+        <AuthForm onAuthenticated={(credentials) => dispatch(setCredentials(credentials))} />
+      ) : !activeRoom ? (
+        <RoomEntry token={token} onEnter={enterRoom} />
+      ) : (
+        <main className="board-page">
+          <div className="board-heading">
+            <div>
+              <button className="back-button" type="button" onClick={() => dispatch(setActiveRoom(null))}>← All boards</button>
+              <h1>{activeRoom.name || "Untitled board"}</h1>
+            </div>
+            <div className={`connection-status ${connected ? "is-connected" : "is-disconnected"}`} role="status">
+              <i />{connected ? "Connected" : "Reconnecting..."}
+            </div>
+          </div>
+          {error && <div className="room-alert" role="alert">{error}</div>}
+          <CanvasBoard socket={socket} roomId={activeRoom._id || activeRoom.id} />
+          <div className="room-code">ROOM CODE <strong>{activeRoom.code || "------"}</strong></div>
+        </main>
+      )}
+    </div>
   );
 }

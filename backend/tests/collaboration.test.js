@@ -65,6 +65,22 @@ test("CollaborationService supports user-scoped undo and redo", () => {
   assert.equal(snapshot.elements.length, 2);
 });
 
+test("CollaborationService deletes elements with user-scoped undo and redo", () => {
+  const service = new CollaborationService();
+  const roomId = "test-room-delete";
+  const userId = "user-delete";
+
+  service.applyStroke(roomId, userId, { id: "element-delete", type: "rect", properties: {} });
+  const deleted = service.deleteElement(roomId, userId, "element-delete");
+  assert.equal(deleted.isDeleted, true);
+  assert.equal(service.getSnapshot(roomId).elements.length, 0);
+
+  assert.equal(service.undo(roomId, userId).isDeleted, false);
+  assert.equal(service.getSnapshot(roomId).elements.length, 1);
+  assert.equal(service.redo(roomId, userId).isDeleted, true);
+  assert.equal(service.getSnapshot(roomId).elements.length, 0);
+});
+
 test("CollaborationService tracks participant presence and cursors", () => {
   const service = new CollaborationService();
   const roomId = "test-room-presence";

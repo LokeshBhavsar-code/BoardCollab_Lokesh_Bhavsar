@@ -22,7 +22,7 @@ const elementSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: ["path", "rect", "circle", "text", "line", "arrow"]
+      enum: ["path", "rect", "circle", "text", "line", "arrow", "polygon"]
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

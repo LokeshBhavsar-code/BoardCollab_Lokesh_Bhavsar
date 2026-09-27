@@ -9,7 +9,7 @@ export class AuthService {
     if (!secret) {
       throw new AppError("Server configuration error: JWT_SECRET missing in environment", 500);
     }
-    const expiresIn = process.env.JWT_EXPIRES_IN || "1d";
+    const expiresIn = process.env.JWT_EXPIRES_IN || "7d";
 
     return jwt.sign(
       {

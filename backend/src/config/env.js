@@ -29,7 +29,7 @@ export const env = {
 
   // Security
   JWT_SECRET: process.env.JWT_SECRET || "default_dev_jwt_secret_do_not_use_in_prod",
-  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "1d",
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "7d",
 
   // Database (MongoDB)
   MONGO_HOST: process.env.MONGO_HOST || "localhost",

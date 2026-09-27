@@ -201,6 +201,7 @@ export class CollaborationService {
       sessionId: String(sessionId || state.sessionId || ""),
       type: elementData.type || "path",
       createdBy: String(userId),
+      ...(elementData.groupId || existing?.groupId ? { groupId: elementData.groupId || existing.groupId } : {}),
       properties: elementData.properties || {},
       version: state.version,
       isDeleted: false,
@@ -234,6 +235,34 @@ export class CollaborationService {
     // Queue for durable persistence
     persistenceService.queueElement(updatedElement);
 
+    return updatedElement;
+  }
+
+  deleteElement(roomId, userId, id) {
+    const state = this.getRoomState(roomId);
+    const existing = state.elements.get(id);
+    if (!existing || existing.isDeleted) return null;
+
+    state.version += 1;
+    const previousState = JSON.parse(JSON.stringify(existing));
+    const updatedElement = {
+      ...existing,
+      isDeleted: true,
+      version: state.version,
+      updatedAt: new Date()
+    };
+    state.elements.set(id, updatedElement);
+
+    const history = this.getUserHistory(state, userId);
+    history.undoStack.push({
+      action: "MODIFY",
+      elementId: id,
+      previousState,
+      newState: JSON.parse(JSON.stringify(updatedElement))
+    });
+    if (history.undoStack.length > env.COLLAB_UNDO_LIMIT) history.undoStack.shift();
+    history.redoStack = [];
+    persistenceService.queueElement(updatedElement);
     return updatedElement;
   }
 

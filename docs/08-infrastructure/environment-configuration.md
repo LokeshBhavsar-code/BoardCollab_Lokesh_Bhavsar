@@ -11,7 +11,7 @@ Document expected environment variables and how configuration should be managed.
 | `MONGO_DATABASE` | database name | yes | `boardcollab` |
 | `REDIS_PASSWORD` | Redis password | yes | `change_me_redis_local` |
 | `JWT_SECRET` | signing secret | yes | `replace_with_a_long_random_secret` |
-| `JWT_EXPIRES_IN` | JWT validity lifetime | yes | `1d` |
+| `JWT_EXPIRES_IN` | JWT validity lifetime | yes | `7d` |
 | `BACKEND_PORT` | backend port | yes | `5000` |
 | `FRONTEND_PORT` | frontend port | yes | `5173` |
 | `CLIENT_ORIGIN` | allowed CORS origin | yes | `http://localhost:5173` |

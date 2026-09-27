@@ -138,6 +138,20 @@ export class ExportService {
           svgBody += `  <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${strokeWidth}" stroke-linecap="round" />\n`;
           break;
         }
+
+        case "polygon": {
+          const rawPoints = props.points || [];
+          if (rawPoints.length < 2) break;
+          const stroke = sanitizeColor(props.stroke, "#000000");
+          const strokeWidth = sanitizeNumber(props.strokeWidth, 2);
+          const fill = sanitizeColor(props.fill, "none");
+          const pointsStr = rawPoints
+            .map((p) => Array.isArray(p) ? `${sanitizeNumber(p[0])},${sanitizeNumber(p[1])}` : "")
+            .filter(Boolean)
+            .join(" ");
+          svgBody += `  <polygon points="${pointsStr}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" stroke-linejoin="round" />\n`;
+          break;
+        }
       }
     }
 
@@ -241,6 +255,20 @@ ${svgBody}</svg>`;
           ctx.beginPath();
           ctx.moveTo(x1, y1);
           ctx.lineTo(x2, y2);
+          ctx.stroke();
+          break;
+        }
+
+        case "polygon": {
+          const points = props.points || [];
+          if (points.length < 2) break;
+          ctx.beginPath();
+          ctx.moveTo(sanitizeNumber(points[0][0]), sanitizeNumber(points[0][1]));
+          for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(sanitizeNumber(points[i][0]), sanitizeNumber(points[i][1]));
+          }
+          ctx.closePath();
+          if (props.fill && props.fill !== "none" && props.fill !== "transparent") ctx.fill();
           ctx.stroke();
           break;
         }

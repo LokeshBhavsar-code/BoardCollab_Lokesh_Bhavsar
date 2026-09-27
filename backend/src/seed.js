@@ -6,29 +6,29 @@ import logger from "./utils/logger.js";
 
 export const TEST_USERS = [
   {
-    username: "alice_collab",
-    email: "alice@boardcollab.dev",
-    password: "Password123!"
+    username: "aarav_sharma",
+    email: "aarav.sharma@boardcollab.dev",
+    password: "Aarav@2024"
   },
   {
-    username: "bob_designer",
-    email: "bob@boardcollab.dev",
-    password: "Password123!"
+    username: "priya_patel",
+    email: "priya.patel@boardcollab.dev",
+    password: "Priya#4521"
   },
   {
-    username: "charlie_pm",
-    email: "charlie@boardcollab.dev",
-    password: "Password123!"
+    username: "rohan_mehta",
+    email: "rohan.mehta@boardcollab.dev",
+    password: "Rohan!8899"
   },
   {
-    username: "dana_engineer",
-    email: "dana@boardcollab.dev",
-    password: "Password123!"
+    username: "ananya_iyer",
+    email: "ananya.iyer@boardcollab.dev",
+    password: "Ananya@3311"
   },
   {
-    username: "evan_architect",
-    email: "evan@boardcollab.dev",
-    password: "Password123!"
+    username: "vikram_nair",
+    email: "vikram.nair@boardcollab.dev",
+    password: "Vikram#7765"
   }
 ];
 

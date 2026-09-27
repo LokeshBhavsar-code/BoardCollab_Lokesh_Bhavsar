@@ -77,6 +77,42 @@ export function registerDrawHandlers(io, socket) {
     }
   });
 
+  socket.on("element:updated", async (data, ack) => {
+    try {
+      const roomId = socket.data.roomId;
+      const element = data?.element;
+      const id = element?.id || element?.elementId;
+      if (!roomId || !id || element.isDeleted !== true) {
+        const error = { code: "INVALID_ELEMENT_UPDATE", message: "A room and deleted element are required" };
+        if (typeof ack === "function") ack({ error });
+        return;
+      }
+
+      const role = await getUserRoleInRoom(roomId, socket.user.id);
+      if (!role || role === "viewer") {
+        const error = { code: "FORBIDDEN", message: "Only owners and editors can delete elements" };
+        if (typeof ack === "function") ack({ error });
+        return;
+      }
+
+      const updatedElement = collaborationService.deleteElement(roomId, socket.user.id, id);
+      if (updatedElement) {
+        io.to(roomId).emit("element:updated", {
+          roomId,
+          element: updatedElement,
+          action: "delete",
+          userId: socket.user.id
+        });
+      }
+      if (typeof ack === "function") ack({ success: Boolean(updatedElement), element: updatedElement });
+    } catch (err) {
+      console.error("[Socket] element:updated error:", err.message);
+      const error = { code: "ELEMENT_UPDATE_ERROR", message: safeErrorMessage(err) };
+      socket.emit("room:error", error);
+      if (typeof ack === "function") ack({ error });
+    }
+  });
+
   // User-scoped Undo
   socket.on("undo", (data, ack) => {
     try {
