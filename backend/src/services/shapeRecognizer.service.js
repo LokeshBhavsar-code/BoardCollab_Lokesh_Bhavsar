@@ -105,7 +105,7 @@ export function computeMetrics(points) {
   const coords = norm.points.map((p) => [p.x, p.y]);
   const tensor = tf.tensor2d(coords, [n, 2]);
 
-  // L-6: Use a single tf.tidy() so all intermediate tensors (mean, diff, square, etc.)
+  //  Use a single tf.tidy() so all intermediate tensors (mean, diff, square, etc.)
   // are automatically disposed after the computation, preventing memory accumulation.
   const { meanRadius, varianceRadius } = tf.tidy(() => {
     const x = tensor.slice([0, 0], [n, 1]);

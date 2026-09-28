@@ -3,7 +3,7 @@
 ## Purpose
 Describe the backend responsibilities for shared drafting and real-time concurrency within a room.
 
-## Planned responsibilities
+## Implemented responsibilities
 - validate incoming drawing operations
 - authorize operations against room membership
 - order operations or attach sequence metadata
@@ -21,7 +21,7 @@ The collaboration service should not manage the React UI or browser-specific sta
 - Redis for temporary coordination or pub/sub
 
 ## Implementation status
-Status: planned, not yet implemented.
+Status: implemented in `backend/src/services/collaboration.service.js`, with room and drawing handlers in `backend/src/sockets/handlers`. Version checks reject stale writes; there is no general OT/CRDT engine.
 
 ## Related
 - [Real-time communication](../02-architecture/real-time-communication.md)

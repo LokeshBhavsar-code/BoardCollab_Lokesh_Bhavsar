@@ -3,11 +3,14 @@
 ## Purpose
 Document the expected security model for login and token handling.
 
-## Planned controls
+## Implemented controls
 - password hashing before storage
 - JWT signing with a secret configured in environment variables
 - token expiration enforcement
-- token refresh strategy after decision and if necessary
+
+## Remaining work
+- token refresh/rotation strategy if required
+- production secret provisioning and rotation
 
 ## Risks
 - weak or leaked JWT secret
@@ -15,7 +18,7 @@ Document the expected security model for login and token handling.
 - accepting invalid or expired tokens
 
 ## Implementation status
-Status: environment variables exist; auth logic is not implemented.
+Status: bcrypt password hashing and expiring JWT validation are implemented. There is no refresh-token flow; production secret management remains external.
 
 ## Related
 - [Security architecture](security-architecture.md)

@@ -37,7 +37,7 @@ Responsible for authentication, request validation, and centralized failures.
 - model tests validate schema constraints and field-level behavior
 
 ## Implementation status
-Status: not yet implemented as a full module layout.
+Status: the listed boundaries exist under `backend/src`; tests currently cover services, middleware, persistence, exports, and socket security.
 
 ## Related
 - [Backend structure](backend-structure.md)

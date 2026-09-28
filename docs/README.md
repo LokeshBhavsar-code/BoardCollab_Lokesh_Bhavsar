@@ -1,17 +1,15 @@
 # BoardCollab Engineering Documentation
 
 ## Purpose
-This documentation set is the shared source of truth for the BoardCollab engineering team. It reflects the current repository state, calls out implemented foundations, and clearly labels design work that is still planned.
+This documentation set describes the current BoardCollab implementation and separates verified behavior from proposed design, operational guidance, and known gaps. Feature status is based on code and tests in this repository; architectural target documents are not evidence that a feature is complete.
 
 ## Documentation status legend
-- Implemented: currently present in the codebase or Docker setup.
-- Partial: foundation exists but is not yet complete.
-- Planned: architecture decisions or features described as future work.
+- Implemented: present in the codebase and covered by relevant tests or runtime wiring.
+- Partial: some behavior exists, with documented limits or missing production guarantees.
+- Planned: a target design or future work not currently provided by the application.
 
 ## Overview
-BoardCollab is a real-time collaborative whiteboard project built as a modular monolith with a React frontend, Express API, Socket.IO real-time layer, MongoDB persistence, Redis for caching and messaging, and Docker-based local orchestration.
-
-The repository currently contains the project foundation and service wiring. Core collaboration features such as authentication, room management, drawing sync, persistence, and conflict resolution are planned architecture work rather than complete implementations.
+BoardCollab is a real-time collaborative whiteboard implemented as a modular monolith: a React/Vite frontend, Express API, Socket.IO collaboration layer, MongoDB persistence, and optional Redis-backed Socket.IO fan-out. Docker Compose provides local development; a separate production Compose file builds the app containers and expects external MongoDB and Redis services.
 
 ## Recommended reading order
 1. Start with the overview and architecture set.
@@ -45,7 +43,7 @@ The repository currently contains the project foundation and service wiring. Cor
 - [Room lifecycle](03-backend/room-lifecycle.md) — room creation, membership, and lifecycle expectations.
 - [Collaboration service](03-backend/collaboration-service.md) — drawing and real-time collaboration responsibilities.
 - [Persistence service](03-backend/persistence-service.md) — MongoDB save queue and session durability work.
-- [Export service](03-backend/export-service.md) — PNG/SVG export contract and planned behavior.
+- [Export service](03-backend/export-service.md) — implemented JSON/PNG/SVG export behavior.
 
 ### 04 Frontend
 - [Frontend structure](04-frontend/frontend-structure.md) — feature-oriented app layout.
@@ -135,26 +133,22 @@ The repository currently contains the project foundation and service wiring. Cor
 - New developers: begin with [local development](12-operations/local-development.md), [developer onboarding](12-operations/developer-onboarding.md), and [feature status](13-project-management/feature-status.md).
 
 ## Current implementation baseline
-The repository currently contains:
-- Docker Compose services for MongoDB, Redis, backend, and frontend.
-- Express health endpoint at `/api/health`.
-- React landing page in the frontend.
-- Environment definitions for MongoDB, Redis, JWT, and frontend/backend URLs.
-- Node test stub for the health endpoint.
 
-The following are not yet implemented in the codebase but are planned as part of BoardCollab’s architecture:
-- user registration and login
-- room authorization and membership
-- drawing primitives and toolbars
-- real-time collaboration socket flows
-- per-user undo/redo
-- persistence batching and autosave
-- Redis pub/sub scaling and reconnection flows
-- export pipeline
+Implemented code includes:
+- Registration, login, JWT-protected HTTP routes, request validation, rate limiting, and room ownership/member checks.
+- Room creation, listing, joining, metadata updates, archival, and export/offline-sync endpoints.
+- Konva canvas UI, Redux state, authenticated Socket.IO connections, room presence, drawing updates, version conflict rejection, and user-scoped undo/redo.
+- IndexedDB caching and pending-operation replay support in the frontend.
+- MongoDB models and batched element persistence; Redis connection and Socket.IO adapter with an in-memory fallback.
+- SVG/PNG export services and client/server shape-recognition code.
+- Docker development and production image configurations, plus Node test suites.
+
+Important limits remain: Redis is optional and in-memory fallback supports only one backend process; production MongoDB/Redis, TLS, secrets, backups, and deployment operations are external responsibilities; frontend automated tests are not currently present. Read [known limitations](13-project-management/known-limitations.md) and individual design documents for finer status distinctions.
 
 ## Related repository files
 - [README](../README.md)
 - [docker-compose.yml](../docker-compose.yml)
+- [docker-compose.prod.yml](../docker-compose.prod.yml)
 - [backend/package.json](../backend/package.json)
 - [frontend/package.json](../frontend/package.json)
 - [.env.example](../.env.example)

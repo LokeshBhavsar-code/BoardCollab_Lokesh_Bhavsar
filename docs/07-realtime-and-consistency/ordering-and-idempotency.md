@@ -15,7 +15,7 @@ Document how events should be sequenced and why duplicates must be handled consi
 - event processors should check for operation IDs before applying mutation
 
 ## Implementation status
-Status: planned; no event or versioning model is implemented yet.
+Status: session/element versions and stale-write rejection are implemented. A durable operation ID/deduplication log and guaranteed exactly-once replay are not implemented.
 
 ## Related
 - [Conflict resolution](conflict-resolution.md)

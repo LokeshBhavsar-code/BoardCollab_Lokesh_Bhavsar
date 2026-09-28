@@ -32,7 +32,7 @@ flowchart TD
 ```
 
 ## Implementation status
-Status: planned architecture; current UI is a static landing page.
+Status: authentication, room entry, board/canvas, toolbar, and participant components are implemented. The document's remaining component boundaries are guidance for future extraction and extension.
 
 ## Related
 - [Frontend structure](frontend-structure.md)

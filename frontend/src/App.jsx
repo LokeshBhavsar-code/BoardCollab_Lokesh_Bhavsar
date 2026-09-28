@@ -8,6 +8,7 @@ import { useSocket } from "./hooks/useSocket.js";
 import { hydrateCanvas } from "./redux/canvasSlice.js";
 import { getTokenExpiry } from "./redux/store.js";
 import { clearCredentials, setActiveRoom, setCredentials } from "./redux/roomSlice.js";
+import { getCachedRoomElements } from "./offline/indexedDb.js";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -25,9 +26,24 @@ export default function App() {
     return () => window.clearTimeout(timeout);
   }, [dispatch, token]);
 
-  function enterRoom(room) {
-    dispatch(hydrateCanvas({ roomId: room._id || room.id, elements: room.elements || [] }));
+  async function enterRoom(room) {
+    const id = room._id || room.id;
+    // Immediately hydrate with server-provided elements (if any)
+    dispatch(hydrateCanvas({ roomId: id, elements: room.elements || [] }));
     dispatch(setActiveRoom(room));
+
+    // If no server elements (e.g., offline), fallback to IndexedDB cache
+    if (!room.elements || room.elements.length === 0) {
+      try {
+        const cached = await getCachedRoomElements(id);
+        if (cached && cached.length > 0) {
+          dispatch(hydrateCanvas({ roomId: id, elements: cached }));
+          console.log(`[Offline] Loaded ${cached.length} cached elements for room ${id}`);
+        }
+      } catch (err) {
+        console.warn("[Offline] Could not load cached elements:", err);
+      }
+    }
   }
 
   return (

@@ -4,33 +4,27 @@
 Document the durable data model and the division between MongoDB and Redis.
 
 ## Durable source of truth
-MongoDB is intended to store:
+MongoDB currently stores:
 - user records
 - room metadata
 - sessions
 - canvas elements
-- operation logs or versioned history
-- persistence metadata
 
 ## Transient storage
-Redis is intended to store:
-- connection/session cache
-- pub/sub messages for socket fan-out
-- temporary throttling or rate-limit keys
-- ephemeral join or token cache
+Redis currently provides Socket.IO pub/sub fan-out when configured. It is not the durable room-state store and is not currently used as a general session cache or rate-limit store.
 
 ## Collection strategy
-A reasonable initial strategy is:
+The implemented collections are:
 - users collection
 - rooms collection
 - sessions collection
-- elements collection or embedded array if usage remains small
+- elements collection keyed by room, session, and element ID
 
 ## Design note
 For a board with 5,000-10,000 elements, the recommended direction is to isolate large canvas element sets into their own collection or a dedicated session document with careful page size management.
 
 ## Implementation status
-Status: planned design; no schema models exist yet.
+Status: user, room, session, and canvas-element Mongoose models and indexes are implemented. Operation logs, migrations, and deployment data lifecycle tooling are not.
 
 ## Related
 - [Entity relationship diagram](entity-relationship-diagram.md)

@@ -17,7 +17,7 @@ Document the database indexing and validation strategy expected for collaboratio
 - duplicate operation IDs should be rejected or deduplicated
 
 ## Implementation status
-Status: design-level guidance; no schema is yet created.
+Status: unique user/room/element indexes and room/session lookup indexes are defined in the Mongoose models. Review those model declarations as the source of truth for actual constraints.
 
 ## Related
 - [Database overview](database-overview.md)

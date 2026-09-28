@@ -1,7 +1,7 @@
 # Docker Architecture
 
 ## Purpose
-Explain the local container architecture used by the repository.
+Explain the local development and production app-container architectures used by the repository.
 
 ## Services
 - `mongo`: MongoDB 7 container
@@ -21,7 +21,7 @@ flowchart LR
 ```
 
 ## Implementation status
-Status: implemented in docker-compose.yml.
+Status: development services are defined in `docker-compose.yml`; production backend and frontend targets are defined in the Dockerfiles and `docker-compose.prod.yml`.
 
 ## Related
 - [Docker compose services](docker-compose-services.md)

@@ -1,7 +1,7 @@
 /**
  * Extended export service tests covering:
- * - M-10: SVG XSS sanitization (malicious color/attribute injection)
- * - M-4: PNG export returns a Buffer
+ *  SVG XSS sanitization (malicious color/attribute injection)
+ *  PNG export returns a Buffer
  */
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -9,9 +9,7 @@ import { ExportService } from "../src/services/export.service.js";
 
 const baseRoom = { _id: "r1", name: "Test Room" };
 
-// ---------------------------------------------------------------------------
-// M-10: SVG XSS sanitization
-// ---------------------------------------------------------------------------
+//  SVG XSS sanitization
 
 test("M-10: exportSvg rejects malicious fill attribute (XSS injection attempt)", () => {
   const elements = [
@@ -118,9 +116,8 @@ test("M-10: exportSvg allows valid CSS color values through sanitizer", () => {
   assert.ok(svg.includes('fill="rgba(255, 0, 0, 0.5)"'), "Valid rgba should pass through");
 });
 
-// ---------------------------------------------------------------------------
 // M-4: PNG export
-// ---------------------------------------------------------------------------
+
 
 test("M-4: exportPng returns a Buffer for a room with elements", async () => {
   const elements = [

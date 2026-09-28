@@ -18,7 +18,7 @@ export class RoomsController {
 
   static async listRooms(req, res, next) {
     try {
-      // H-3: Accept pagination params from query string
+      //  Accept pagination params from query string
       const { page = 1, limit = 50 } = req.query;
       const result = await RoomsService.listRooms(req.user.id, page, limit);
       res.status(200).json(result);
@@ -57,11 +57,11 @@ export class RoomsController {
     }
   }
 
-  // M-3: DELETE endpoint — soft-deletes (archives) the room
+  //  DELETE endpoint — soft-deletes (archives) the room
   static async deleteRoom(req, res, next) {
     try {
       const { id } = req.params;
-      // Pass the io instance from app locals so active sockets are notified (M-6)
+      // Pass the io instance from app locals so active sockets are notified 
       const io = req.app.get("io");
       const result = await RoomsService.deleteRoom(id, req.user.id, io);
       res.status(200).json(result);

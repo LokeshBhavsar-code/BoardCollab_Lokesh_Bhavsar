@@ -1,7 +1,8 @@
 node_modules
+dist
+build
+coverage
 .env
 .env.*
-coverage
 *.log
 .git
-dist

@@ -23,7 +23,7 @@ const createRoomSchema = {
   }
 };
 
-// All room routes require authentication per docs/05-api-contracts/rooms-api.md
+// All room routes require authentication 
 router.use(authenticate);
 
 router.post("/", validate(createRoomSchema), RoomsController.createRoom);

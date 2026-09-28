@@ -14,7 +14,7 @@ Define baseline operational guidance for MongoDB in local and deployed environme
 - keep MongoDB behind a private network or managed service boundary
 
 ## Implementation status
-Status: service is configured but application schema and operational tooling are not yet implemented.
+Status: Mongoose schemas and indexes are implemented; backup/restore, migration, and production maintenance tooling remain operator responsibilities.
 
 ## Related
 - [Database overview](../06-data-design/database-overview.md)

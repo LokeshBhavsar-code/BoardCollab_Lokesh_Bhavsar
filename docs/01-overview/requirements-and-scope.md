@@ -24,17 +24,7 @@ The application is expected to support:
 - 5,000-10,000 canvas elements per session
 
 ## Current repository evidence
-The following are verified from the codebase:
-- a React app shell exists
-- an Express health endpoint exists
-- Docker services for MongoDB and Redis are configured
-- environment variables for backend and frontend are defined
-
-The following remain planned:
-- protected auth and room APIs
-- collaborative canvas operations
-- persistence queue
-- socket auth and room join logic
+Implemented and tested behavior includes registration/login, protected room APIs, live canvas operations, authenticated sockets and room joining, batched persistence, per-user undo/redo, room export, offline batch sync, and local MongoDB/Redis composition. See the feature status page for partial behaviors and explicit out-of-scope items.
 
 ## Non-functional expectations
 - secure JWT-based authentication
@@ -44,7 +34,7 @@ The following remain planned:
 - graceful reconnect after network interruption
 
 ## Implementation status
-Status: Planned architecture with partial foundation.
+Status: Core interaction requirements are implemented; production-scale capacity targets and operational guarantees are not yet verified.
 
 ## Related
 - [Project overview](project-overview.md)

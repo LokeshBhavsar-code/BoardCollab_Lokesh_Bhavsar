@@ -9,6 +9,9 @@ Describe the data model for collaborative rooms and room state snapshots.
 - `description`
 - `ownerId`
 - `visibility`
+- `code`
+- `members` (`userId`, role, `joinedAt`)
+- `isArchived`
 - `createdAt`
 - `updatedAt`
 - `isArchived`
@@ -38,7 +41,7 @@ Describe the data model for collaborative rooms and room state snapshots.
 ```
 
 ## Implementation status
-Status: planned design only.
+Status: implemented by `backend/src/models/room.model.js` and `session.model.js`. A room has one active session selected by query logic; historical session retention is not yet an operational guarantee.
 
 ## Related
 - [Canvas element schema](canvas-element-schema.md)

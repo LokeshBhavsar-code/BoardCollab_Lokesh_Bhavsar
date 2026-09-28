@@ -11,7 +11,7 @@ Describe the tests required to validate realtime drawing collaboration.
 - reconnect and room rejoin after disconnect
 
 ## Implementation status
-Status: planned; no socket integration suite exists yet.
+Status: backend tests exercise socket handler behavior with stubs, including error sanitization and session propagation. A live multi-client Socket.IO end-to-end suite and reconnect/load tests are not present.
 
 ## Related
 - [Testing strategy](testing-strategy.md)

@@ -12,7 +12,7 @@
 - Namespace: logical Socket.IO room or channel partition for a board session
 
 ## Status
-This glossary is a design reference; several terms are not yet implemented in code.
+This glossary defines terminology used by both the current implementation and future design documents; a term's presence here does not imply that every described capability is implemented.
 
 ## Related
 - [Project overview](project-overview.md)

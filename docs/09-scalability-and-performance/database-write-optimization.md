@@ -3,7 +3,7 @@
 ## Purpose
 Document how drawing events and snapshots should be persisted efficiently.
 
-## Planned strategies
+## Current implementation and follow-up
 - batch writes for multiple operations in a time window
 - store session version metadata to avoid stale writes
 - keep full snapshots and deltas separated if the board grows large
@@ -15,7 +15,7 @@ Document how drawing events and snapshots should be persisted efficiently.
 - stale writes if room version tracking is inaccurate
 
 ## Implementation status
-Status: planned design only.
+Status: element writes are queued and batch-flushed with retry after write failure, and session/element versions reject stale writes. Durable queueing, full snapshots/deltas, and load-tested performance remain future work.
 
 ## Related
 - [Persistence service](../03-backend/persistence-service.md)

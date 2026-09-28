@@ -4,8 +4,9 @@
 Describe the HTTP and socket contract conventions in a single place.
 
 ## Contract status
-- Implemented: `GET /api/health`
-- Planned: registration, login, room endpoints, exports, and collaboration events
+- Implemented: health, authentication, room management, room export, and offline batch-sync HTTP routes.
+- Implemented: authenticated Socket.IO room, drawing, presence, history, and heartbeat events.
+- For payload details, see the endpoint and event documents linked below; check the route validators and handlers when changing contracts.
 
 ## HTTP API conventions
 - base path prefix: `/api`

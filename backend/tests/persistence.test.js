@@ -62,6 +62,25 @@ test("PersistenceService.flush writes all queued elements and clears queue", asy
   assert.equal(svc.pendingQueue.size, 0, "Queue should be empty after flush");
 });
 
+test("PersistenceService.flush respects the configured batch limit", async () => {
+  const svc = new PersistenceService(999_999, 1);
+  svc.stopAutoFlush();
+  svc.queueElement({ roomId: "r1", elementId: "e1", sessionId: "s1", type: "path", properties: {}, version: 1, isDeleted: false });
+  svc.queueElement({ roomId: "r1", elementId: "e2", sessionId: "s1", type: "rect", properties: {}, version: 1, isDeleted: false });
+
+  const batchSizes = [];
+  mock.method(CanvasElement, "bulkWrite", async (ops) => { batchSizes.push(ops.length); return {}; });
+  mock.method(Session, "updateMany", async () => {});
+
+  await svc.flush();
+  assert.deepEqual(batchSizes, [1]);
+  assert.equal(svc.pendingQueue.size, 1, "Items beyond the limit should remain queued");
+
+  await svc.flush();
+  assert.deepEqual(batchSizes, [1, 1]);
+  assert.equal(svc.pendingQueue.size, 0);
+});
+
 test("PersistenceService.flush re-queues items on write failure", async () => {
   const svc = makePersistenceService();
 

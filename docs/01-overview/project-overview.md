@@ -1,7 +1,7 @@
 # Project Overview
 
 ## Purpose
-BoardCollab is a collaborative whiteboard application for teams to create shared visual workspaces in real time. The repository is currently a foundation for the eventual production design, with core collaboration layers still to be implemented.
+BoardCollab is a collaborative whiteboard application for teams to create shared visual workspaces in real time. This repository contains a working application and local development stack; production operation still requires environment-specific services and operational controls.
 
 ## Audience
 - engineering leadership
@@ -12,26 +12,16 @@ BoardCollab is a collaborative whiteboard application for teams to create shared
 This document covers the project intent, the current implementation status, and the architectural direction for the monolithic full-stack application.
 
 ## Implementation status
-Status: Partial implementation.
+Status: Core user flows are implemented; scale and production operations remain limited.
 
-The repository includes:
-- React frontend bootstrapped with Vite
-- Express health endpoint
-- MongoDB and Redis service composition
-- environment configuration
-
-Not yet implemented:
-- auth flows
-- room logic
-- collaborative drawing engine
-- state sync and persistence
+Implemented capabilities include JWT account flows, room management, a Konva canvas, authenticated Socket.IO collaboration, presence, undo/redo, offline operation sync, MongoDB persistence, PNG/SVG export, and shape recognition. See the [feature status](../13-project-management/feature-status.md) for limits and test coverage.
 
 ## Architecture summary
 The intended architecture is a modular monolith:
 - frontend: React UI with canvas rendering and websocket client
 - backend: Express app with modular route/service layers and socket server
-- data layer: MongoDB for durable state and Redis for cache/session/pub-sub
-- operations: Docker Compose for local environment and future deployment orchestration
+- data layer: MongoDB for durable state and Redis-backed Socket.IO fan-out when Redis is available
+- operations: Docker Compose for local development; production app images use external database/cache services
 
 ## Runtime view
 ```mermaid
@@ -45,9 +35,9 @@ flowchart LR
 ```
 
 ## Open questions
-- Which canvas library will be used in production: Konva or Fabric?
-- Will room session state be stored in a single document or separated by collection?
-- Which conflict-resolution strategy is selected before production rollout?
+- What deployment topology and capacity targets will be validated under load?
+- What migration and backup/restore process will be operated for production data?
+- Should conflict handling evolve beyond the current server-version checks?
 
 ## Related
 - [Requirements and scope](requirements-and-scope.md)

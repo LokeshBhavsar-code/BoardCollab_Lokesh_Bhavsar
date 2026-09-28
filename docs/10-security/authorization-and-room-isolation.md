@@ -15,7 +15,7 @@ Describe how room access and user actions should be isolated.
 - forged socket payloads with invalid user context
 
 ## Implementation status
-Status: planned design only.
+Status: authenticated room reads and socket joins enforce room visibility/membership; owner/editor checks protect selected room and canvas mutations. Authorization coverage should be extended with tests whenever new operations are added.
 
 ## Related
 - [Security architecture](security-architecture.md)

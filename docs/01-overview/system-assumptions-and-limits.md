@@ -7,11 +7,10 @@ Explicitly document all technical assumptions, operational limits, and boundary 
 
 ### 1. Canvas Elements & Room Capacity
 - **Max Elements per Room**: **10,000 elements**.
-  - *Rationale*: Beyond 10,000 active vector nodes, browser canvas rendering (Konva/HTML5 Canvas) degrades below 60fps without spatial viewport culling.
-  - *Mitigation*: Canvas culling renders only elements intersecting the visible viewport; archiving older sessions resets the active element count.
+  - This is an enforced collaboration-service limit, not a load-tested performance threshold. Rendering performance at this size has not been benchmarked.
 - **Max Stroke Points**: **5,000 points per individual stroke**.
   - Prevents pathological memory usage or packet size spikes from infinite drawing loops.
-- **Max Payload Size**: **5 MB** for REST request payloads and **1 MB** for WebSocket frames.
+- **REST JSON Body Size**: **5 MB** via Express JSON middleware. Socket.IO uses its library default frame limit; this repository does not override it.
 
 ### 2. History & Undo/Redo Stacks
 - **User Stack Depth**: **50 operations** per user per room.
@@ -24,14 +23,14 @@ Explicitly document all technical assumptions, operational limits, and boundary 
 - For multi-region expansion, see [Scalability & Sharding Architecture](../02-architecture/scalability-and-sharding.md).
 
 ### 4. Durability & Persistence Cadence
-- **Persistence Flush Window**: **500ms** auto-flush debounce in `PersistenceService`.
+- **Persistence Flush Interval**: **500ms** default periodic auto-flush in `PersistenceService`.
 - High-frequency drawing strokes are aggregated in an in-memory queue and flushed via MongoDB `bulkWrite` upsert operations.
 - Server shutdown invokes an emergency blocking flush before process termination.
 
 ### 5. Offline Storage Boundaries (IndexedDB)
-- **Offline Cache Retention**: 30 days of cached room snapshots.
-- **Max Offline Pending Operations**: Up to 1,000 queued operations per room prior to reconnection.
-- Conflict policy: Last-Write-Wins (LWW) based on monotonic room sequence versions.
+- IndexedDB element and pending-operation records have no configured expiry or queue-length cap.
+- The server accepts up to **1,000 offline operations per sync batch** by default (`OFFLINE_SYNC_BATCH_LIMIT`), not 1,000 queued items total.
+- Conflict policy: stale writes with an outdated element version are rejected; this is not a general LWW merge or OT/CRDT system.
 
 ## Summary Table
 
@@ -41,9 +40,9 @@ Explicitly document all technical assumptions, operational limits, and boundary 
 | Max Points per Stroke | 5,000 | `STROKE_MAX_POINTS` |
 | Undo Stack Depth | 50 operations | `COLLAB_UNDO_LIMIT` |
 | Persistence Flush Interval | 500 ms | `PERSISTENCE_FLUSH_INTERVAL_MS` |
-| Max REST Body Size | 5 MB | `EXPRESS_BODY_LIMIT` |
-| Max Socket Payload | 1 MB | `SOCKET_MAX_HTTP_BUFFER_SIZE` |
-| AI Confidence Threshold | 0.70 | `VITE_AI_CONFIDENCE_THRESHOLD` |
+| Offline Sync Batch Limit | 1,000 operations | `OFFLINE_SYNC_BATCH_LIMIT` |
+| REST JSON Body Size | 5 MB | Express middleware configuration |
+| AI Recognition Confidence | 0.70 default | backend: `AI_CONFIDENCE_THRESHOLD`; frontend: `frontend/src/ai/recognizerConfig.js` constant |
 
 ## Related
 - [Capacity planning](../09-scalability-and-performance/capacity-planning.md)

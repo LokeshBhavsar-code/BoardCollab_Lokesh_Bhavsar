@@ -10,18 +10,17 @@ Describe the expected baseline security controls and trust boundaries for BoardC
 - Docker network isolates service-to-service traffic in development
 
 ## Controls in place
-- Docker Compose service credentials are defined in environment files
-- CORS is configured in `app.js`
-- the repo includes JWT secret values in environment config
+- Helmet security headers, CORS, JSON size limits, request validation, and global/auth rate limits are configured in the Express app/routes
+- bcrypt password hashes and JWT authentication protect HTTP and Socket.IO access
+- room and canvas actions apply access/role checks
+- MongoDB and Redis local credentials are supplied through the untracked environment file
 
-## Planned controls
-- room access enforcement
-- password hashing
-- input validation and rate limiting
-- secure secret rotation and environment separation
+## Remaining controls
+- production secret provisioning/rotation, TLS, data-service network policy, backups, and incident response are operator responsibilities
+- security tests cover selected API and socket boundaries; a full threat-model validation is still needed
 
 ## Implementation status
-Status: partial foundation exists; full security controls remain planned.
+Status: core application security controls are implemented; production infrastructure and operational controls remain external requirements.
 
 ## Related
 - [Authentication security](authentication-security.md)

@@ -1,11 +1,16 @@
 import CanvasElement from "../models/element.model.js";
 import Session from "../models/session.model.js";
+import env from "../config/env.js";
 
 export class PersistenceService {
-  constructor(flushIntervalMs = 500) {
+  constructor(
+    flushIntervalMs = env.PERSISTENCE_FLUSH_INTERVAL_MS,
+    batchLimit = env.PERSISTENCE_BATCH_LIMIT
+  ) {
     // Map of elementId -> { elementData, roomId, sessionId, type, createdBy, properties, version, isDeleted }
     this.pendingQueue = new Map();
     this.flushIntervalMs = flushIntervalMs;
+    this.batchLimit = batchLimit;
     this.timer = null;
     this.isFlushing = false;
 
@@ -47,8 +52,11 @@ export class PersistenceService {
     }
 
     this.isFlushing = true;
-    const batch = Array.from(this.pendingQueue.values());
-    this.pendingQueue.clear();
+    const batchEntries = Array.from(this.pendingQueue.entries()).slice(0, this.batchLimit);
+    const batch = batchEntries.map(([key, item]) => {
+      this.pendingQueue.delete(key);
+      return item;
+    });
 
     try {
       const bulkOps = batch.map((item) => ({
@@ -98,13 +106,13 @@ export class PersistenceService {
   }
 
   async flushRoom(roomId) {
-    const batch = [];
-    for (const [key, item] of this.pendingQueue.entries()) {
-      if (String(item.roomId) === String(roomId)) {
-        batch.push(item);
-        this.pendingQueue.delete(key);
-      }
-    }
+    const batchEntries = Array.from(this.pendingQueue.entries())
+      .filter(([, item]) => String(item.roomId) === String(roomId))
+      .slice(0, this.batchLimit);
+    const batch = batchEntries.map(([key, item]) => {
+      this.pendingQueue.delete(key);
+      return item;
+    });
 
     if (batch.length === 0) return;
 

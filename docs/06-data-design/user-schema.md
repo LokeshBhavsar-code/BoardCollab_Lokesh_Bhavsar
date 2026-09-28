@@ -30,7 +30,7 @@ Describe the logical structure of the primary user document.
 ```
 
 ## Implementation status
-Status: planned design only.
+Status: implemented by `backend/src/models/user.model.js`; unique email/username indexes and password-hash removal from JSON serialization are defined in the model.
 
 ## Related
 - [Database overview](database-overview.md)

@@ -4,19 +4,19 @@
 Document the architecture choices and deferred work that will require follow-up as the product matures.
 
 ## Current debt areas
-- auth and session model are still open design decisions
-- conflict resolution strategy is not yet chosen
-- persistence queue and autosave are not yet implemented
-- scaling architecture remains conceptual
-- security controls are partially specified only
+- the persistence write queue is in-memory and needs a documented durability/recovery guarantee
+- current version-based conflict rejection may need stronger merge semantics for concurrent editing
+- Redis-backed multi-instance behavior and sticky-session/network requirements need deployment testing
+- production configuration validation, secret management, backup/restore, migrations, and rollout automation need operational ownership
+- frontend and browser-level test coverage is missing; deployment capacity targets need load-test evidence
 
 ## Management guidance
-- decide on the canvas engine and coordination pattern before building business logic
-- define API and socket contracts before broader UI implementation
-- implement tests alongside the core collaboration flow
+- preserve current route/socket contracts with tests when extending behavior
+- validate role and room access behavior across HTTP and Socket.IO paths
+- prioritize persistence recovery, scale testing, and browser-level coverage before production commitments
 
 ## Implementation status
-Status: acknowledged as part of the initial project foundation.
+Status: remaining operational and scalability work is tracked here; core authentication, room, drawing, persistence, and export code already exists.
 
 ## Related
 - [Implementation roadmap](implementation-roadmap.md)

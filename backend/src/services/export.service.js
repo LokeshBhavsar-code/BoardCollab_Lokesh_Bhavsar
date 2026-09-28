@@ -1,11 +1,11 @@
 import { createCanvas } from "canvas"; // M-4: node-canvas for server-side PNG rendering
 
-// M-10: Allowlists for SVG attribute sanitization
+//  Allowlists for SVG attribute sanitization
 const CSS_COLOR_RE = /^(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\)|hsla?\([^)]+\)|[a-z]+|none|transparent)$/i;
 const FINITE_NUMBER_RE = /^-?\d+(\.\d+)?$/;
 
 /**
- * M-10: Sanitize a value intended for an SVG color attribute.
+  Sanitize a value intended for an SVG color attribute.
  * Rejects anything that isn't a recognized CSS color token.
  */
 function sanitizeColor(value, fallback = "#000000") {
@@ -14,7 +14,7 @@ function sanitizeColor(value, fallback = "#000000") {
 }
 
 /**
- * M-10: Sanitize a value intended for a numeric SVG attribute (x, y, width, etc.).
+ *  Sanitize a value intended for a numeric SVG attribute (x, y, width, etc.).
  * Returns the number as a string, or the fallback if invalid.
  */
 function sanitizeNumber(value, fallback = 0) {
@@ -46,7 +46,7 @@ export class ExportService {
   static exportSvg(room, elements, options = {}) {
     const width = sanitizeNumber(options.width, 1920);
     const height = sanitizeNumber(options.height, 1080);
-    // M-10: Escape title for XML output
+    //  Escape title for XML output
     const title = String(room?.name || "BoardCollab Export")
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")

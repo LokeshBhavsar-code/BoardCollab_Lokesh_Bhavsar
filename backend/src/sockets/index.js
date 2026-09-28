@@ -24,7 +24,7 @@ export function initializeSockets(server) {
     }
   });
 
-  // C-2: Wire Redis adapter for horizontal scaling (pub/sub across multiple Node processes/pods).
+  //  Wire Redis adapter for horizontal scaling (pub/sub across multiple Node processes/pods).
   // Falls back to in-process adapter gracefully when Redis is unavailable.
   if (isRedisReady()) {
     const pubClient = getRedisPublisher();

@@ -4,9 +4,9 @@
 Describe the live collaboration layer and required event patterns.
 
 ## Current evidence
-The repository includes a Socket.IO server bootstrap in [backend/src/server.js](../../backend/src/server.js) that emits a `server-ready` event upon connection.
+The repository includes an authenticated Socket.IO server in [backend/src/sockets/index.js](../../backend/src/sockets/index.js), with room and drawing handlers registered on connection. It emits `server-ready`; handlers also implement room state, drawing, undo/redo, clear, presence, and offline-sync events.
 
-## Planned architecture
+## Runtime behavior
 - authenticated connection per user
 - room membership checks before collaboration access
 - broadcast of drawings and presence updates
@@ -23,7 +23,7 @@ The repository includes a Socket.IO server bootstrap in [backend/src/server.js](
 - stale client state after lost network
 
 ## Implementation status
-Status: bootstrapped but not yet implemented as full collaboration protocol.
+Status: collaboration events and authentication are implemented. Redis-backed fan-out is enabled when Redis connects; the fallback is single-process and does not provide cross-instance delivery.
 
 ## Related
 - [Socket events](../05-api-contracts/socket-events.md)

@@ -3,7 +3,7 @@
 ## Purpose
 Outline how a collaboration room is created, joined, modified, and retired.
 
-## Planned lifecycle
+## Implemented lifecycle
 1. user authenticates
 2. user creates a room or joins with invite or code
 3. system creates default room metadata and session state
@@ -24,7 +24,7 @@ Outline how a collaboration room is created, joined, modified, and retired.
 - persistence layer stores metadata and latest snapshot
 
 ## Implementation status
-Status: planned; no room endpoints or models currently exist.
+Status: room models and authenticated create/list/get/join/update/archive routes are implemented. Room archival is a soft delete; socket room membership is checked on join. Review current controller/service rules before changing role semantics.
 
 ## Related
 - [Module responsibilities](module-responsibilities.md)

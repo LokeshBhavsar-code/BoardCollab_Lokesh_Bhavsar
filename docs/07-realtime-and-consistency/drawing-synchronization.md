@@ -17,7 +17,7 @@ Describe how drawing actions are synchronized across collaborators.
 - malicious payload injection
 
 ## Implementation status
-Status: planned. No collaborative drawing logic currently exists.
+Status: authenticated room join, snapshot hydration, drawing broadcast, presence, and offline batch paths are implemented. Snapshot size and concurrent-load behavior have not been benchmarked.
 
 ## Related
 - [Event lifecycle](event-lifecycle.md)

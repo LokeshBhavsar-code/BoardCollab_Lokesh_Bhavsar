@@ -4,15 +4,16 @@
 Capture the non-functional and delivery gaps currently visible in the codebase.
 
 ## Limitations
-- no auth or room APIs exist yet
-- no real-time drawing protocol is implemented
-- no MongoDB schema or model layer exists yet
-- no Redis pub/sub handshake is implemented
-- no export pipeline exists yet
-- no frontend canvas interaction exists beyond shell styling
+- offline operation replay is limited to supported drawing operations and is not a general durable event log
+- the in-memory persistence queue can lose unflushed writes if a process terminates unexpectedly
+- without Redis, socket communication works only within one backend process
+- server version checks reject stale operations but do not implement OT/CRDT merging
+- production MongoDB/Redis, secret delivery, TLS/reverse proxy, backups, and rollout are operator-provided
+- no frontend automated tests or browser-level end-to-end suite currently exists; the frontend test command discovers zero tests
+- documented concurrency targets have not been verified with load testing
 
 ## Implementation status
-Status: current repository is a foundation and not a production-ready collaboration platform.
+Status: core collaboration workflows are implemented, but the repository alone does not provide a production-operated service or validated scale guarantees.
 
 ## Related
 - [Feature status](feature-status.md)

@@ -9,9 +9,7 @@ import assert from "node:assert/strict";
 import { CollaborationService } from "../src/services/collaboration.service.js";
 import { AppError } from "../src/middleware/error.middleware.js";
 
-// ---------------------------------------------------------------------------
 // H-1: OT version conflict detection
-// ---------------------------------------------------------------------------
 
 test("H-1: applyStroke rejects stale clientVersion (OT conflict)", () => {
   const service = new CollaborationService();
@@ -90,9 +88,7 @@ test("H-1: applyStroke allows new elements without clientVersion check", () => {
   assert.equal(el.id, "brand-new");
 });
 
-// ---------------------------------------------------------------------------
-// L-5: clearCanvas resets ALL users' history stacks
-// ---------------------------------------------------------------------------
+//  clearCanvas resets ALL users' history stacks
 
 test("L-5: clearCanvas resets undo/redo history for all users in the room", () => {
   const service = new CollaborationService();
@@ -130,9 +126,7 @@ test("L-5: After clearCanvas, undo returns null for all users", () => {
   assert.equal(result, null, "Undo after clear should return null");
 });
 
-// ---------------------------------------------------------------------------
 // OT conflict produces correct broadcast flow test
-// ---------------------------------------------------------------------------
 
 test("H-1: stale write after concurrent modification is rejected with OT_CONFLICT", () => {
   const service = new CollaborationService();

@@ -1,7 +1,7 @@
 # API Examples
 
 ## Purpose
-Provide sample payloads for the planned API contract.
+Provide representative requests for implemented API routes; exact validation and response fields are defined by the route/controller code.
 
 ## Example: register
 ```http
@@ -37,7 +37,7 @@ Content-Type: application/json
 ```
 
 ## Implementation status
-Status: examples are design references only.
+Status: examples correspond to implemented endpoints; they are illustrative and do not enumerate every response field or error case.
 
 ## Related
 - [Authentication API](authentication-api.md)

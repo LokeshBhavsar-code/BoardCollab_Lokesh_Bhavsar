@@ -3,10 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "description": "Real-time collaborative whiteboard application",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "docker compose up --build",
     "dev:down": "docker compose down",
     "dev:logs": "docker compose logs -f",
+    "build": "npm run build --workspace @boardcollab/frontend",
+    "seed": "node --env-file=.env backend/src/seed.js",
+    "test:backend": "npm run test --workspace @boardcollab/backend",
+    "test:frontend": "npm run test --workspace @boardcollab/frontend",
     "test": "npm run test --workspaces --if-present"
   },
   "workspaces": ["backend", "frontend"]

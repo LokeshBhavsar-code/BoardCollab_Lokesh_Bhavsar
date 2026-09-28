@@ -29,7 +29,7 @@ flowchart LR
 ```
 
 ## Implementation status
-Status: frontend shell exists; feature architecture is planned.
+Status: the React app implements authentication, room entry, collaborative canvas, toolbar, participant presence, Redux state, Socket.IO, IndexedDB offline support, and shape recognition. Automated frontend tests are not currently present.
 
 ## Related
 - [Frontend structure](../04-frontend/frontend-structure.md)

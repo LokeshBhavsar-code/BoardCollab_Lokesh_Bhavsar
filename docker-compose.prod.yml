@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: production
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      CLIENT_ORIGIN: ${CLIENT_ORIGIN:?Set CLIENT_ORIGIN to the public frontend origin}
+      JWT_SECRET: ${JWT_SECRET:?Set a unique production JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      MONGODB_URI: ${MONGODB_URI:?Set MONGODB_URI to the production MongoDB connection string}
+      REDIS_URL: ${REDIS_URL:?Set REDIS_URL to the production Redis connection string}
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-5000}:5000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: production
+      args:
+        VITE_API_URL: ${VITE_API_URL:?Set VITE_API_URL to the public API URL ending in /api}
+        VITE_SOCKET_URL: ${VITE_SOCKET_URL:?Set VITE_SOCKET_URL to the public Socket.IO URL}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${PUBLIC_HTTP_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy

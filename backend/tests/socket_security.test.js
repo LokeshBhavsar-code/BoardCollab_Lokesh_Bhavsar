@@ -1,8 +1,8 @@
 /**
  * Tests for draw socket handler fixes:
- * - H-2: Internal errors are sanitized before sending to clients
- * - H-4: clear-canvas rejects viewers
- * - C-3: sessionId from socket.data is passed through to applyStroke
+ *  Internal errors are sanitized before sending to clients
+ *  clear-canvas rejects viewers
+ *  sessionId from socket.data is passed through to applyStroke
  */
 import test, { mock } from "node:test";
 import assert from "node:assert/strict";
@@ -16,9 +16,8 @@ test.afterEach(() => {
   mock.restoreAll();
 });
 
-// ---------------------------------------------------------------------------
-// H-2: Error message sanitization helper (unit test the exported function)
-// ---------------------------------------------------------------------------
+//  Error message sanitization helper (unit test the exported function)
+
 
 test("H-2: AppError messages are forwarded to the client verbatim", async () => {
   // Dynamically import after mocks to get the real function
@@ -107,9 +106,7 @@ test("H-2: Generic Error messages are masked (not leaked to client)", async () =
   );
 });
 
-// ---------------------------------------------------------------------------
 // C-3: sessionId from socket.data is passed to applyStroke
-// ---------------------------------------------------------------------------
 
 test("C-3: draw-stroke passes socket.data.sessionId to applyStroke", async () => {
   const { registerDrawHandlers } = await import(

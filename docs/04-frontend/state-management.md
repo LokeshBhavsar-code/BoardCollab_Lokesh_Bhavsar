@@ -27,7 +27,7 @@ Define how state should be split between UI, shared workspace, and socket-driven
 - avoid storing server-authoritative state in browser storage for the live board
 
 ## Implementation status
-Status: Redux dependencies exist, but no app state layer is implemented.
+Status: Redux Toolkit slices manage room/session and canvas state. IndexedDB stores offline room elements and queued operations; verify the current store and sync implementation when changing these boundaries.
 
 ## Related
 - [Frontend architecture](../02-architecture/frontend-architecture.md)

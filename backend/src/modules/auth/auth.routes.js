@@ -6,7 +6,7 @@ import { validate } from "../../middleware/validate.middleware.js";
 
 const router = Router();
 
-// M-1: Strict rate limiter for auth endpoints — 10 attempts per 15 minutes per IP
+//  AUTHENTICATION RATE LIMITER 10 failed attempts per 15 minutes per IP
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10,
@@ -41,9 +41,9 @@ const registerSchema = {
     password: {
       required: true,
       type: "string",
-      minLength: 8, // M-2: raised from 6 to 8
+      minLength: 8, 
       maxLength: 128,
-      pattern: PASSWORD_PATTERN, // M-2: must contain at least one letter and one digit
+      pattern: PASSWORD_PATTERN, //  must contain at least one letter and one digit
       patternMessage: "Password must be at least 8 characters and contain at least one letter and one digit"
     }
   }

@@ -939,3 +939,157 @@ button:disabled {
     height: 30px;
   }
 }
+
+/* 
+   Offline Banner */
+.offline-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+  color: #fef2f2;
+  font-size: 13px;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  animation: slideDown 0.3s ease;
+  box-shadow: 0 4px 16px rgba(153, 27, 27, 0.35);
+}
+
+.offline-banner--syncing {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 100%);
+  box-shadow: 0 4px 16px rgba(30, 64, 175, 0.35);
+}
+
+.offline-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.offline-sync-badge {
+  margin-left: auto;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+/* AI Recognition Toast */
+.ai-toast {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.92) 100%);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 12px;
+  color: #f1f5f9;
+  font-size: 13px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(139, 92, 246, 0.15);
+  animation: toastIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), toastOut 0.3s ease 2.5s forwards;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.ai-toast-icon {
+  font-size: 16px;
+}
+
+.ai-toast-type {
+  color: #a78bfa;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.ai-toast-confidence {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.ai-toast-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ede9fe;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px) scale(0.9); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1);   }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* 
+   AI Toggle Button in Toolbar  */
+.tb-ai-btn {
+  position: relative;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.tb-ai-btn.tb-ai-active {
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.18) 0%, rgba(124, 58, 237, 0.12) 100%);
+  border-color: #7c3aed !important;
+  color: #7c3aed;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+.tb-ai-icon {
+  font-size: 15px !important;
+}
+
+/* Pulsing green dot shown when model is loaded + AI is on */
+.tb-ai-ready-dot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 7px;
+  height: 7px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);
+  animation: readyPulse 2s ease-in-out infinite;
+}
+
+@keyframes readyPulse {
+  0%, 100% { transform: scale(1);   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3); }
+  50%       { transform: scale(1.2); box-shadow: 0 0 0 5px rgba(34, 197, 94, 0);   }
+}
+
+/* Board workspace needs relative positioning for absolute children */
+.board-workspace {
+  position: relative;
+}

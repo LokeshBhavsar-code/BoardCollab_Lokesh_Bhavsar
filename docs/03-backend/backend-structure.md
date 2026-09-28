@@ -1,7 +1,7 @@
 # Backend Structure
 
 ## Purpose
-Document the intended backend structure for the modular monolith and how it aligns to the current repository foundation.
+Document the backend modular-monolith structure and how its implemented modules are organized.
 
 ## Proposed structure
 ```text
@@ -38,7 +38,7 @@ The codebase currently contains:
 - prefer explicit data ownership per module
 
 ## Implementation status
-Status: proposed modularization and partial foundation only.
+Status: auth, room, service, model, middleware, and socket modules are implemented. Additional proposed boundaries in this document are organizational guidance, not separate deployed services.
 
 ## Related
 - [Module responsibilities](module-responsibilities.md)

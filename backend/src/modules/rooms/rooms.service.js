@@ -12,10 +12,8 @@ export class RoomsService {
   }
 
   static async createRoom({ name, description = "", visibility = "private", ownerId }) {
-    // C-5: Generate unique room code with bounded retries.
-    // Instead of an unbounded loop, we try up to 10 times and let MongoDB's unique
-    // index on `code` be the final safety net — catching the 11000 duplicate error
-    // at the create() call below if a race still occurs.
+    //  Generate unique room code with 10 attempts to avoid collisions. 
+
     let code;
     const MAX_CODE_RETRIES = 10;
     for (let attempt = 0; attempt < MAX_CODE_RETRIES; attempt++) {
@@ -31,7 +29,7 @@ export class RoomsService {
       throw new AppError("Unable to generate a unique room code, please retry", 500, "ROOM_CODE_EXHAUSTED");
     }
 
-    // M-8: Use findOneAndUpdate with upsert for the room creation so that if two
+    //  Use findOneAndUpdate with upsert for the room creation so that if two
     // concurrent requests race past code generation, only one succeeds.
     const room = await Room.create({
       name,
@@ -105,7 +103,7 @@ export class RoomsService {
   static async getRoom(roomId, userId) {
     let room;
     // Check if queried by 6-char room code or ObjectId
-    // H-6: Both paths now include isArchived: false filter
+    //  Both paths now include isArchived: false filter
     if (roomId.length === 6) {
       room = await Room.findOne({ code: roomId.toUpperCase(), isArchived: false });
     } else {
@@ -123,7 +121,7 @@ export class RoomsService {
       throw new AppError("You do not have permission to access this room", 403, "FORBIDDEN");
     }
 
-    // M-8: Use upsert to avoid duplicate active sessions from concurrent calls
+    //  Use upsert to avoid duplicate active sessions from concurrent calls
     const session = await Session.findOneAndUpdate(
       { roomId: room._id, status: "active" },
       { $setOnInsert: { roomId: room._id, version: 1, status: "active" } },
@@ -144,7 +142,7 @@ export class RoomsService {
 
   static async joinRoom(roomId, userId, role = "editor") {
     let room;
-    // H-6: Both paths include isArchived: false filter
+    //  Both paths include isArchived: false filter
     if (roomId.length === 6) {
       room = await Room.findOne({ code: roomId.toUpperCase(), isArchived: false });
     } else {
@@ -190,7 +188,7 @@ export class RoomsService {
   }
 
   /**
-   * M-3: Soft-delete a room (owner only).
+   *  Soft-delete a room (owner only).
    * Sets isArchived: true and emits a room:archived Socket.IO event so active
    * WebSocket connections are notified and can gracefully disconnect (M-6).
    */

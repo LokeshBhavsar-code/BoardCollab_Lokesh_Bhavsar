@@ -12,6 +12,9 @@ import {
   toggleSelectedId,
   undoLocal
 } from "../redux/canvasSlice.js";
+import { useOffline } from "../hooks/useOffline.js";
+import { useAIShapes } from "../hooks/useAIShapes.js";
+import { cacheRoomElements } from "../offline/indexedDb.js";
 import Toolbar from "./Toolbar.jsx";
 
 const TRANSFORMABLE_TYPES = new Set(["rect", "circle", "text"]);
@@ -142,7 +145,7 @@ function propertiesAfterTransform(element, node) {
 
 export default function CanvasBoard({ socket, roomId }) {
   const dispatch = useDispatch();
-  const { tool, color, strokeWidth, fillEnabled, elements, selectedIds, undoStack, redoStack } = useSelector((state) => state.canvas);
+  const { tool, color, strokeWidth, fillColor, fillEnabled, elements, selectedIds, undoStack, redoStack } = useSelector((state) => state.canvas);
   const activeElements = useMemo(() => elements.filter((element) => !element.isDeleted), [elements]);
   const stageRef = useRef(null);
   const containerRef = useRef(null);
@@ -159,6 +162,20 @@ export default function CanvasBoard({ socket, roomId }) {
   const [gridVisible, setGridVisible] = useState(true);
   const [panMode, setPanMode] = useState(false);
   const [isPanning, setIsPanning] = useState(false);
+
+  // Offline mode — SyncManager wired to socket
+  const { isOnline, isReplaying, pendingCount, dispatchDraw } = useOffline(socket, roomId);
+
+  // AI shape recognition — TF.js CNN + geometric heuristic
+  const { aiEnabled, modelStatus, toggleAI, recognizeStroke, lastRecognition } = useAIShapes();
+
+  // Cache elements to IndexedDB whenever they change (for offline access)
+  useEffect(() => {
+    if (!roomId || !elements.length) return;
+    cacheRoomElements(roomId, elements).catch((err) =>
+      console.warn("[Offline] Failed to cache elements:", err)
+    );
+  }, [roomId, elements]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -273,7 +290,8 @@ export default function CanvasBoard({ socket, roomId }) {
   function commitElement(value) {
     const element = { id: crypto.randomUUID(), ...value };
     dispatch(addLocalElement(element));
-    socket?.emit("draw-stroke", { roomId, element });
+    // Use SyncManager: emits immediately if online, queues to IndexedDB if offline
+    dispatchDraw(roomId, element);
   }
 
   function eraseElement(id) {
@@ -522,12 +540,23 @@ export default function CanvasBoard({ socket, roomId }) {
     });
   }
 
-  function finishDrawing() {
+  async function finishDrawing() {
     pointerDown.current = false;
     if (!draft || draft.type === "polygon") return;
     const completed = draft;
     setDraft(null);
     const p = completed.properties;
+
+    // AI shape recognition: only on pen strokes when aiEnabled
+    if (completed.type === "path" && aiEnabled) {
+      const rawPoints = (p.points || []).map(([x, y]) => ({ x, y }));
+      const recognized = await recognizeStroke(rawPoints, tool, color, strokeWidth, fillEnabled, fillColor);
+      if (recognized) {
+        commitElement(recognized);
+        return;
+      }
+    }
+
     if (completed.type === "path" && p.points.length < 2) p.points.push(p.points[0]);
     commitElement({ type: completed.type, properties: p });
   }
@@ -628,6 +657,40 @@ export default function CanvasBoard({ socket, roomId }) {
 
   return (
     <section className="board-workspace" aria-label="Collaborative whiteboard">
+      {/* Offline banner */}
+      {!isOnline && (
+        <div className="offline-banner" role="alert" aria-live="polite">
+          <span className="offline-icon">📡</span>
+          <span>
+            <strong>You're offline.</strong>{" "}
+            {pendingCount > 0
+              ? `${pendingCount} stroke${pendingCount > 1 ? "s" : ""} queued — will sync when reconnected.`
+              : "Drawings will be saved and synced when you reconnect."}
+          </span>
+          {isReplaying && <span className="offline-sync-badge">Syncing…</span>}
+        </div>
+      )}
+      {isOnline && pendingCount > 0 && isReplaying && (
+        <div className="offline-banner offline-banner--syncing" role="status" aria-live="polite">
+          <span className="offline-icon">🔄</span>
+          <span>Syncing {pendingCount} offline stroke{pendingCount > 1 ? "s" : ""}…</span>
+        </div>
+      )}
+
+      {/* AI recognition toast */}
+      {lastRecognition && (
+        <div className="ai-toast" role="status" aria-live="polite" key={JSON.stringify(lastRecognition)}>
+          <span className="ai-toast-icon">✨</span>
+          <span>
+            <strong>AI recognized:</strong>{" "}
+            <span className="ai-toast-type">{lastRecognition.type}</span>
+            {" "}
+            <span className="ai-toast-confidence">({(lastRecognition.confidence * 100).toFixed(0)}%)</span>
+            {lastRecognition.source === "tfjs" && <span className="ai-toast-badge">TF.js</span>}
+          </span>
+        </div>
+      )}
+
       <Toolbar
         stageRef={stageRef}
         dimensions={dimensions}
@@ -639,6 +702,9 @@ export default function CanvasBoard({ socket, roomId }) {
         onZoomReset={zoomReset}
         gridVisible={gridVisible}
         onToggleGrid={toggleGrid}
+        aiEnabled={aiEnabled}
+        modelStatus={modelStatus}
+        onToggleAI={toggleAI}
       />
       <div className={frameClassName} ref={containerRef}>
         <Stage

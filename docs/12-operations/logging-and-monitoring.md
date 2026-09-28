@@ -4,16 +4,15 @@
 Define the expected operational observability baseline for BoardCollab.
 
 ## Current state
-The repository does not yet include a formal monitoring stack or centralized logs.
+Backend services use `backend/src/utils/logger.js` for level-filtered logs (key/value-style development output and JSON production output). Docker Compose exposes container logs and MongoDB/Redis health checks. There is no formal metrics, tracing, alerting, or centralized logging stack.
 
-## Planned practices
-- emit structured backend logs for requests, auth failures, and socket disconnects
-- capture container logs through Docker Compose
-- track rate of room joins, failed auth, and drawing operations
-- monitor MongoDB and Redis health checks for service degradation
+## Follow-up practices
+- add request/socket metrics, tracing, alerts, and centralized retention
+- capture container logs through Docker Compose during local development
+- monitor API health and MongoDB/Redis health for service degradation
 
 ## Implementation status
-Status: planned.
+Status: basic service logging and local health checks are implemented; production observability is not.
 
 ## Related
 - [Troubleshooting](troubleshooting.md)

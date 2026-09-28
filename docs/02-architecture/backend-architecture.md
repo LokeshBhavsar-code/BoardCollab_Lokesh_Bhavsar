@@ -38,7 +38,7 @@ flowchart TD
 - avoid circular dependencies across modules
 
 ## Implementation status
-Status: module structure is proposed; the repository currently only includes a minimal Express app and socket bootstrap.
+Status: modular routes, controllers, services, models, middleware, and Socket.IO handlers are implemented under `backend/src`.
 
 ## Related
 - [System architecture](system-architecture.md)

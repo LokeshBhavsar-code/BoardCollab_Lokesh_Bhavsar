@@ -11,6 +11,8 @@ Summarize internal and external network topology.
 | MongoDB | `mongo` | `27017` | database service |
 | Redis | `redis` | `6379` | cache and messaging |
 
+These are the development Compose ports. In production Compose, the static frontend listens on container port `80` and the API on `5000`; both are bound to host loopback by default for a reverse proxy. MongoDB and Redis are external services.
+
 ## Access guidance
 - browser calls should target the frontend host port for local dev
 - backend services should use service names over container-local hostnames in Docker

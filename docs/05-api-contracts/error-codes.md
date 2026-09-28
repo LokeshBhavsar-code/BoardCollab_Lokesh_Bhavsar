@@ -13,12 +13,12 @@ Define common API and socket error semantics.
 - 500: server-side failure
 
 ## Socket error conventions
-- emit a structured `error` or `room:error` event with `code` and `message`
-- include `retryable` flag when appropriate
-- keep client-visible errors human-readable and safe for UI rendering
+- errors use `{ code, message }` and are emitted as `room:error` for most handler failures
+- callback acknowledgements, when supplied, return `{ error }`; successful mutations return `{ success: true, ... }`
+- generic internal socket errors are masked; known application errors may be forwarded
 
 ## Implementation status
-Status: design-level contract only.
+Status: centralized HTTP error handling and socket error shaping are implemented. This page lists common semantics, not an exhaustive error-code registry.
 
 ## Related
 - [Authentication API](authentication-api.md)

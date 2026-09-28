@@ -15,7 +15,7 @@ Define how user-scoped history and board state recovery should be designed.
 - clear or invalidate redo when a new conflicting action occurs
 
 ## Implementation status
-Status: planned design only.
+Status: user-scoped undo/redo is implemented in the collaboration service and covered by backend tests. History is in memory and is not restored after backend restart.
 
 ## Related
 - [Conflict resolution](conflict-resolution.md)

@@ -3,7 +3,7 @@ import Room from "../../models/room.model.js";
 import { AppError, CapacityLimitError } from "../../middleware/error.middleware.js";
 
 /**
- * H-2: Sanitize socket error messages — only forward known AppError/CapacityLimitError
+ *  Sanitize socket error messages — only forward known AppError/CapacityLimitError
  * messages to the client; mask all other internal errors.
  */
 function safeErrorMessage(err) {
@@ -14,7 +14,7 @@ function safeErrorMessage(err) {
 }
 
 /**
- * H-4: Resolve the role of the current socket user within a given room.
+ *  Resolve the role of the current socket user within a given room.
  * Returns the role string ("owner"|"editor"|"viewer") or null if not a member.
  */
 async function getUserRoleInRoom(roomId, userId) {
@@ -186,7 +186,7 @@ export function registerDrawHandlers(io, socket) {
     }
   });
 
-  // Clear canvas for room — H-4: only owner or editor can clear
+  // Clear canvas for room  only owner or editor can clear
   socket.on("clear-canvas", async (data, ack) => {
     try {
       const roomId = data?.roomId || socket.data.roomId;
@@ -244,7 +244,7 @@ export function registerDrawHandlers(io, socket) {
         socket.user.id,
         operations,
         clientBaseVersion,
-        socket.data.sessionId // C-3: correctly populated
+        socket.data.sessionId //  correctly populated
       );
 
       // Broadcast applied elements to all other room participants

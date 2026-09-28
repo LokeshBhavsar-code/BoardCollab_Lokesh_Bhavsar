@@ -16,7 +16,7 @@ Define how board and session state transitions are stored durably.
 - persistence should avoid full-document rewrites for every tiny operation in a high-frequency drawing session
 
 ## Implementation status
-Status: planned; queue and save logic are not yet implemented.
+Status: an in-memory batched write queue persists canvas elements through the MongoDB model and retries failed batches. MongoDB is the durable store; the queue itself is not durable across process loss before flush.
 
 ## Related
 - [Persistence and recovery](../07-realtime-and-consistency/persistence-and-recovery.md)

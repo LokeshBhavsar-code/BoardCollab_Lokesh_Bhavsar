@@ -1,13 +1,12 @@
 # Export Service
 
 ## Purpose
-Describe the planned export pipeline for board snapshots.
+Describe the board snapshot export pipeline currently used by the API.
 
-## Planned capabilities
+## Supported formats
 - export current board state as PNG or SVG
 - serialize canvas elements into a renderable document
-- include metadata such as room ID, timestamp, and author
-- generate a downloadable artifact for the user
+- generate a downloadable response with a filename and content type
 
 ## Dependencies
 - room/session model
@@ -16,7 +15,7 @@ Describe the planned export pipeline for board snapshots.
 - file generation service
 
 ## Implementation status
-Status: planned, not implemented.
+Status: implemented for JSON, SVG, and PNG output through the authenticated room export endpoint. Export membership follows room-read access checks.
 
 ## Related
 - [Export API](../05-api-contracts/export-api.md)

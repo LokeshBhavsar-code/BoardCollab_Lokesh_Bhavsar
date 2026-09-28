@@ -1,7 +1,7 @@
 /**
  * Comprehensive tests for RoomsService covering:
  * - Room creation (C-5 code uniqueness), M-8 (session upsert), M-3 (deleteRoom),
- *   H-3 (pagination), H-6 (isArchived filter), M-6 (archive cascade).
+ *   (pagination), H-6 (isArchived filter), M-6 (archive cascade).
  */
 import test, { mock } from "node:test";
 import assert from "node:assert/strict";
@@ -18,9 +18,7 @@ test.afterEach(() => {
   mock.restoreAll();
 });
 
-// ---------------------------------------------------------------------------
-// createRoom — C-5: bounded code retries
-// ---------------------------------------------------------------------------
+// createRoom : bounded code retries
 
 test("RoomsService.createRoom generates a unique room code with bounded retries", async () => {
   let callCount = 0;
@@ -70,9 +68,7 @@ test("RoomsService.createRoom throws after exhausting code retries", async () =>
   );
 });
 
-// ---------------------------------------------------------------------------
-// listRooms — H-3: pagination
-// ---------------------------------------------------------------------------
+// listRooms : pagination
 
 test("RoomsService.listRooms applies pagination and returns metadata", async () => {
   const fakeRooms = [{ _id: "r1", name: "Room 1" }];
@@ -111,9 +107,8 @@ test("RoomsService.listRooms clamps limit to 100 max", async () => {
   assert.equal(capturedLimit, 100, "Limit should be clamped to 100");
 });
 
-// ---------------------------------------------------------------------------
-// getRoom — H-6: isArchived filter on ObjectId path
-// ---------------------------------------------------------------------------
+
+// getRoom : isArchived filter on ObjectId path
 
 test("RoomsService.getRoom uses isArchived filter on ObjectId path", async () => {
   let filterUsed = null;
@@ -134,9 +129,7 @@ test("RoomsService.getRoom uses isArchived filter on ObjectId path", async () =>
   );
 });
 
-// ---------------------------------------------------------------------------
-// deleteRoom — M-3: soft-delete, M-6: socket eviction
-// ---------------------------------------------------------------------------
+// deleteRoom : soft-delete, M-6: socket eviction
 
 test("RoomsService.deleteRoom archives the room (owner only)", async () => {
   let savedRoom = null;
@@ -198,9 +191,7 @@ test("RoomsService.deleteRoom emits room:archived to active sockets", async () =
   assert.equal(emitted[0].event, "room:archived");
 });
 
-// ---------------------------------------------------------------------------
-// getRoom — M-8: session upsert
-// ---------------------------------------------------------------------------
+// getRoom : session upsert
 
 test("RoomsService.getRoom uses findOneAndUpdate upsert for session creation", async () => {
   const fakeRoom = {

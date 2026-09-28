@@ -3,7 +3,7 @@
 ## Purpose
 Document the registration and login contract for BoardCollab.
 
-## Planned endpoints
+## Implemented endpoints
 ### POST /api/auth/register
 - Purpose: create a new user account
 - Auth required: no
@@ -31,7 +31,7 @@ Document the registration and login contract for BoardCollab.
 - Response: `200 OK` with JWT token and user metadata
 
 ## Implementation status
-Status: planned, not implemented in the repo.
+Status: implemented. Request bodies are validated; authentication endpoints have a dedicated rate limit. `GET /api/auth/me` also requires a bearer token.
 
 ## Related
 - [API overview](README.md)

@@ -11,7 +11,7 @@ Document backend test expectations for Express, services, and socket access cont
 - queue and persistence logic tests
 
 ## Implementation status
-Status: minimal TODO-level health test exists; production backend test suite is planned.
+Status: a Node test suite exists under `backend/tests`, currently 69 tests covering auth, collaboration, export security/output, health, OT/version conflicts and canvas clearing, persistence, rooms, shape recognition, socket security, and request validation. Run it with `npm run test:backend` from the repository root.
 
 ## Related
 - [Testing strategy](testing-strategy.md)

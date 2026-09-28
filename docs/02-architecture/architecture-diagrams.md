@@ -116,7 +116,7 @@ erDiagram
 ```
 
 ## Implementation status
-Status: design diagrams are documentation artifacts; runtime features are still planned.
+Status: diagrams include current runtime paths and target deployment concepts. Verify implementation status against the linked feature and deployment documents.
 
 ## Related
 - [System architecture](system-architecture.md)

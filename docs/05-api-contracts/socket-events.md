@@ -3,27 +3,28 @@
 ## Purpose
 Document collaboration events expected by clients and server.
 
-## Event table
-| Event | Direction | Auth | Purpose | Persistence |
-| --- | --- | --- | --- | --- |
-| `join-room` | client -> server | yes | join or rejoin a room session | no |
-| `draw-stroke` | client -> server | yes | send a drawing operation | yes |
-| `undo` | client -> server | yes | revert latest action for a user | yes |
-| `redo` | client -> server | yes | reapply latest undo | yes |
-| `heartbeat` | client -> server | yes | connection liveness signal | no |
-| `presence:update` | server -> client | yes | user presence changes | no |
-| `room:state` | server -> client | yes | current room snapshot | no |
+## Implemented client-to-server events
+Every connection must authenticate with a JWT. Room access is checked when `join-room` is handled.
 
-## Validation expectations
-- ensure room membership before accepting events
-- reject malformed payloads with explicit error codes
-- enforce dedupe or sequence checks for retry scenarios
+| Event | Purpose |
+| --- | --- |
+| `join-room` | Join by room ID/code; receives `room:state` and an acknowledgement. |
+| `leave-room` | Leave the active room and update presence. |
+| `draw-stroke` | Apply a drawing element; stale versions and capacity limits can reject the write. |
+| `element:updated` | Delete an element; owner/editor role required. |
+| `undo`, `redo` | Apply user-scoped history operations. |
+| `clear-canvas` | Clear a room; owner/editor role required. |
+| `sync-offline-batch` | Replay a batch of offline operations. |
+| `cursor:move` | Broadcast transient cursor coordinates. |
+| `heartbeat` | Return a timestamp acknowledgement. |
 
-## Acknowledgment behavior
-Server acknowledgments are expected to carry success or failure status and optional metadata.
+## Implemented server-to-client events
+`server-ready`, `room:state`, `draw-stroke`, `element:updated`, `room:batch-updated`, `canvas:cleared`, `presence:update`, `cursor:update`, `room:error`, and `room:archived`.
+
+Acknowledgements are supplied for room joins and mutating events when the client provides a callback. Errors use `{ error: { code, message } }` and may also be emitted as `room:error`.
 
 ## Implementation status
-Status: planned; only `server-ready` is implemented in [backend/src/server.js](../../backend/src/server.js).
+Status: implemented in `backend/src/sockets/index.js` and `backend/src/sockets/handlers`. This contract summarizes event names; handler code remains authoritative for payload details.
 
 ## Related
 - [Real-time communication](../02-architecture/real-time-communication.md)

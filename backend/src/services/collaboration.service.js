@@ -6,13 +6,7 @@ import logger from "../utils/logger.js";
 
 export class CollaborationService {
   constructor() {
-    // Map of roomId -> {
-    //   elements: Map<elementId, element>,
-    //   users: Map<socketId, { user, cursor, joinedAt }>,
-    //   history: Map<userId, { undoStack: Array, redoStack: Array }>,
-    //   version: number,
-    //   isLoaded: boolean
-    // }
+   
     this.rooms = new Map();
   }
 
@@ -142,19 +136,9 @@ export class CollaborationService {
     return state.history.get(uid);
   }
 
-  /**
-   * H-1: Applies a stroke with basic Operational Transformation (OT) version check.
-   *
-   * The server enforces monotonic versioning:
-   * - If the client provides a `clientVersion` and the existing element has a HIGHER
-   *   server version, the client is operating on stale state. We reject with a CONFLICT
-   *   error and the client must fetch the latest state and re-apply on top.
-   * - If no `clientVersion` is provided (legacy / new element), we apply unconditionally.
-   *
-   * This is a "last-write-wins with stale-detection" OT — a pragmatic minimum that
-   * prevents silent data loss from concurrent edits. Full OT (ot-json0 transform) can
-   * be added on top of this gate by transforming the operation before applying.
-   */
+ // Rejects stale client versions to prevent conflicting updates and data loss.
+// Applies valid strokes using last-write-wins version checking.
+
   applyStroke(roomId, userId, elementData, sessionId) {
     const state = this.getRoomState(roomId);
     const elementId = elementData.id || elementData.elementId;
@@ -363,13 +347,8 @@ export class CollaborationService {
     return clearedElements;
   }
 
-  /**
-   * Syncs batch of offline operations sent by client upon reconnection.
-   * Handles idempotency, conflict detection, and server monotonic ordering.
-   *
-   * M-9: Made async-compatible. For large batches, processing is chunked with
-   * setImmediate yields to avoid blocking the Node.js event loop.
-   */
+  // Syncs offline operations on reconnection, handling duplicates, conflicts, and ordering.
+// Processes large batches asynchronously to prevent blocking the Node.js event loop.
   syncOfflineBatch(roomId, userId, operations = [], clientBaseVersion = 0, sessionId = null) {
     const state = this.getRoomState(roomId);
     const appliedElements = [];

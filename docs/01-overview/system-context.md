@@ -30,10 +30,10 @@ flowchart LR
 - Browser to backend: protected via CORS, JWT, and socket auth
 - Backend to MongoDB: service-level DB credentials
 - Backend to Redis: password-protected cache and pub/sub traffic
-- Docker network: internal service-only access, host port exposure limited to frontend/backend and database ports
+- Docker network: Compose services communicate through service DNS; the development stack publishes frontend, backend, MongoDB, and Redis ports for local use. Production Compose binds the app containers to loopback and expects external MongoDB/Redis.
 
 ## Implementation status
-Status: design-level only, with infrastructure foundation in place.
+Status: the runtime integrations are implemented; production infrastructure policy and operations remain deployment responsibilities.
 
 ## Related
 - [Project overview](project-overview.md)

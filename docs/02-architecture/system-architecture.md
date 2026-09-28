@@ -23,19 +23,18 @@ Define the runtime system responsibilities and module boundaries for the BoardCo
 - pushes presence and real-time updates to connected users
 
 ### MongoDB
-- stores durable user, room, and board state
-- retains snapshots, metadata, and undo history plans
+- stores user, room, session, and canvas-element documents
+- does not store the in-memory undo/redo history or collaboration room cache
 - supports query-based room and user lookups
 
 ### Redis
-- caches session metadata and lookup data
-- supports pub/sub and socket fan-out for a multi-instance deployment
-- stores transient ephemeral state such as reconnect tokens or throttling keys
+- provides Socket.IO pub/sub fan-out when the Redis adapter connects
+- is not used as the durable board store or general session cache
 
 ## Failure behavior
 - Failed API calls return explicit HTTP errors.
 - Socket disconnects trigger graceful reconnect and room rejoin flows.
-- A Redis outage should degrade non-critical caches without destroying durable state in MongoDB.
+- A Redis outage falls back to the in-process Socket.IO adapter; cross-process fan-out is unavailable in fallback mode.
 - MongoDB failure blocks durable writes and should surface clear service errors.
 
 ## Diagram
@@ -51,7 +50,7 @@ flowchart TB
 ```
 
 ## Implementation status
-Status: partial foundation implemented; full system design is planned.
+Status: core frontend, API, socket, MongoDB, and Redis-adapter paths are implemented. The diagrams include proposed scale and production-operation concerns that are not deployed by this repository.
 
 ## Related
 - [Architecture diagrams](architecture-diagrams.md)

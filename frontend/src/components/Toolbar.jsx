@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearCanvas,
@@ -35,7 +35,7 @@ function Divider() {
   return <div className="tb-divider" aria-hidden="true" />;
 }
 
-export default function Toolbar({ stageRef, socket, roomId }) {
+export default function Toolbar({ stageRef, socket, roomId, aiEnabled, modelStatus, onToggleAI }) {
   const dispatch = useDispatch();
   const { tool, color, fillColor, fillEnabled, strokeWidth, undoStack, redoStack } =
     useSelector((s) => s.canvas);
@@ -203,6 +203,30 @@ export default function Toolbar({ stageRef, socket, roomId }) {
         </button>
         <button className="tb-btn tb-danger" title="Clear board" onClick={clear} aria-label="Clear board">
           <span className="tb-icon">Clear</span><span className="tb-label">Board</span>
+        </button>
+      </div>
+
+      <Divider />
+
+      {/* AI Shape Recognition */}
+      <div className="tb-group">
+        <button
+          id="ai-shapes-toggle"
+          className={`tb-btn tb-ai-btn ${aiEnabled ? "tb-active tb-ai-active" : ""}`}
+          title={aiEnabled ? "Disable AI shape recognition" : "Enable AI shape recognition (pen strokes auto-snap to shapes)"}
+          aria-label="Toggle AI shape recognition"
+          aria-pressed={aiEnabled}
+          onClick={onToggleAI}
+        >
+          <span className="tb-icon tb-ai-icon">
+            {modelStatus === "loading" ? "⏳" : modelStatus === "error" ? "⚠️" : "🤖"}
+          </span>
+          <span className="tb-label">
+            {modelStatus === "loading" ? "AI…" : aiEnabled ? "AI On" : "AI Off"}
+          </span>
+          {modelStatus === "ready" && aiEnabled && (
+            <span className="tb-ai-ready-dot" title="Model ready" />
+          )}
         </button>
       </div>
 

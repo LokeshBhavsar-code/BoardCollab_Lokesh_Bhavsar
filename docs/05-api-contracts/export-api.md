@@ -3,12 +3,12 @@
 ## Purpose
 Document room export behavior.
 
-## Planned endpoint
+## Implemented endpoint
 ### POST /api/rooms/:id/export
 - Purpose: create a board snapshot export in PNG or SVG format
 - Auth required: yes
-- Query params: `format=png|svg`
-- Response: export metadata plus download URL or binary payload
+- Query params: `format=json|svg|png` (defaults to `json`)
+- Response: downloadable JSON, SVG, or PNG body with `Content-Disposition` filename
 
 ## Validation
 - room membership required
@@ -16,7 +16,7 @@ Document room export behavior.
 - export generation should fail gracefully if state is empty or invalid
 
 ## Implementation status
-Status: planned, not implemented.
+Status: implemented at `POST /api/rooms/:id/export`; a bearer token and room access are required.
 
 ## Related
 - [Export service](../03-backend/export-service.md)

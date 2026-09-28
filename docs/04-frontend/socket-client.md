@@ -15,7 +15,7 @@ Describe the expected role of the browser-side Socket.IO client in a collaborati
 The socket client should not directly manipulate the database or business layer. It should translate browser actions into socket events and propagate server-driven changes into the frontend state layer.
 
 ## Implementation status
-Status: socket client dependency exists, but connection logic is not implemented.
+Status: `frontend/src/hooks/useSocket.js` owns the authenticated socket lifecycle and dispatches room, drawing, presence, and reconnection events into application state.
 
 ## Related
 - [Real-time communication](../02-architecture/real-time-communication.md)

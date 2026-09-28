@@ -3,7 +3,7 @@
 ## Purpose
 Document how Socket.IO may be scaled horizontally in a future deployment.
 
-## Planned approach
+## Current approach and constraints
 - multiple backend nodes behind a load balancer
 - Redis adapter for pub/sub and cross-instance message propagation
 - room-based fan-out to keep message routing localized
@@ -14,7 +14,7 @@ Document how Socket.IO may be scaled horizontally in a future deployment.
 - not all client reconnection patterns are equivalent under polling or websocket failover
 
 ## Implementation status
-Status: conceptual design only.
+Status: the Redis adapter is wired into the server when Redis is ready. The in-memory fallback is single-process; multi-instance deployment, load-balancer affinity, and capacity remain unverified.
 
 ## Related
 - [Scalability strategy](scalability-strategy.md)

@@ -12,7 +12,7 @@ Describe the intended feature-oriented React structure for the BoardCollab clien
 - socket client: lifecycle, event handlers, reconnect logic
 
 ## Current evidence
-The frontend currently contains a simple app shell and landing page only. It does not yet implement the feature structure indicated above.
+The frontend implements an authenticated app shell, room entry, collaborative canvas and toolbar, participant presence, API clients, Redux slices, Socket.IO integration, IndexedDB offline support, and shape-recognition hooks.
 
 ## Design principles
 - keep UI components thin and domain-driven
@@ -21,7 +21,7 @@ The frontend currently contains a simple app shell and landing page only. It doe
 - treat Socket.IO as a low-level transport, not a UI dependency
 
 ## Implementation status
-Status: partial foundation implemented.
+Status: the core application flows are implemented. Automated frontend test cases are not currently present.
 
 ## Related
 - [Component architecture](component-architecture.md)

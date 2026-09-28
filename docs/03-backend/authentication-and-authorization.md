@@ -4,7 +4,7 @@
 Describe the required auth design for BoardCollab and identify the current implementation gap.
 
 ## Current evidence
-The repo includes JWT secret and expiration env variables in [.env.example](../../.env.example), but no authentication implementation exists yet.
+Registration, login, current-user lookup, bcrypt password hashing, JWT validation for HTTP and Socket.IO, request validation, and auth rate limiting are implemented under `backend/src/modules/auth` and `backend/src/middleware`.
 
 ## Planned design
 - register a new user with email or username and password
@@ -24,7 +24,7 @@ The repo includes JWT secret and expiration env variables in [.env.example](../.
 - reject malformed payloads before business logic execution
 
 ## Implementation status
-Status: planned design, not implemented.
+Status: implemented. Private room access and room-owner/editor/viewer checks are enforced in room and socket flows; review role behavior in code before extending permissions.
 
 ## Related
 - [Backend structure](backend-structure.md)

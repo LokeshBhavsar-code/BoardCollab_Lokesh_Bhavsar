@@ -4,9 +4,9 @@
 Document the expected canvas rendering architecture for collaborative drawing.
 
 ## Technologies
-The project declares `react-konva` and `konva` in the frontend package manifest, which indicates the intended canvas stack. The repository does not yet contain a live canvas implementation.
+The project uses `react-konva` and `konva` in `CanvasBoard.jsx` to render and interact with board elements.
 
-## Planned responsibilities
+## Implemented and follow-up responsibilities
 - render shapes and strokes on a board surface
 - manage selected drawing tool state
 - support preview before commit
@@ -19,7 +19,7 @@ The project declares `react-konva` and `konva` in the frontend package manifest,
 - keep shape-level data normalized for efficient updates
 
 ## Implementation status
-Status: planned, with dependency present but no active canvas behavior implemented.
+Status: canvas drawing, element rendering, and tool controls are implemented. Advanced selection and viewport performance tuning remain follow-up work.
 
 ## Related
 - [Frontend structure](frontend-structure.md)

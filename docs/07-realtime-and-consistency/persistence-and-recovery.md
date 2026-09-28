@@ -19,7 +19,7 @@ Detail the durable save strategy and recovery behavior after disconnect or resta
 - pending writes should be retried or idempotently applied
 
 ## Implementation status
-Status: planned design only.
+Status: MongoDB element persistence, batched flushing, retry-on-write-failure, and frontend IndexedDB replay foundations are implemented. The in-memory pending write queue is not durable across abrupt process loss.
 
 ## Related
 - [Persistence service](../03-backend/persistence-service.md)
